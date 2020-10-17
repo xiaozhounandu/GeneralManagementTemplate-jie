@@ -8,10 +8,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 
-//创建配置类：
+
 @Configuration
+//表明是一个配置类
 @EnableWebSecurity
-public class    SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+//web认证
+public class   SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     //修改配置用户密码编解码方式：
@@ -22,18 +24,25 @@ public class    SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .withUser("admin")
                 .password(new MyPasswordEncoder().encode("123456"))
                 .roles("ADMIN ");
+        //指定用户
 
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http.authorizeRequests()
+                //
                 .antMatchers("/").permitAll()
+                //放行根目录
                 .anyRequest().authenticated()
+
                 .and()
+
                 .logout().permitAll()
+                //登出
                 .and()
                 .formLogin();
+        //登入
         http.csrf().disable();
     }
 
@@ -41,5 +50,6 @@ public class    SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception{
         web.ignoring().antMatchers("/js/**","/css/**","/images/**");
+        //指定匹配
     }
 }
